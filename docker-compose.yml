@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  postgres-master:
+    image: postgres:16-alpine
+    container_name: postgres-master
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/master:/var/lib/postgresql/data
+    command: postgres -c wal_level=logical
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      socialmedia-nw:
+        ipv4_address: 179.18.0.101
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
+  pgbouncer-master:
+    image: edoburu/pgbouncer
+    container_name: pgbouncer-master
+    ports:
+      - "54322:5432"
+    networks:
+      socialmedia-nw:
+        ipv4_address: 179.18.0.103
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=postgres-master
+      - DB_NAME=socialmedia
+      - MAX_CLIENT_CONN=100
+      - AUTH_TYPE=scram-sha-256 # for postgres:14 and above
+      - POOL_MODE=transaction
+      - ADMIN_USERS=postgres
+    depends_on:
+      - postgres-master
+
+  dynamodb:
+    image: amazon/dynamodb-local
+    container_name: dynamodb
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./data/dynamodb:/home/dynamodblocal/data
+
+
+  rabbitmq-1:
+    image: rabbitmq:3.13-management
+    hostname: rabbitmq-1
+    container_name: rabbitmq-1
+    environment:
+      RABBITMQ_DEFAULT_USER: socialmedia-erlang-cookie
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_ERLANG_COOKIE: guest
+      RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      socialmedia-nw:
+        ipv4_address: 179.18.0.110
+
+networks:
+  socialmedia-nw:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 179.18.0.0/24
