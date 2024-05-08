@@ -38,7 +38,7 @@ class MessageService:
 
     def messages_of_room(self, room_id: int, user_id: int, last_timestamp: int):
         self.chatroom_service._member_exists_of_user(room_id=room_id, user_id=user_id)
-        messages, last_timestamp = self.message_repo.messages_query_of_room(
+        messages, last_timestamp = self.message_repo.messages_of_room(
             room_id=room_id, last_timestamp=last_timestamp, limit=self.message_rows_number
         )
         return messages, last_timestamp

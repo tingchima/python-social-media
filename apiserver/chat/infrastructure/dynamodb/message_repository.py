@@ -30,7 +30,7 @@ class MessageRepository(Boto3Repository):
     def key(self, entity: MessageKey) -> dict:
         return dict(**entity.__dict__)
 
-    def messages_query_of_room(self, room_id: int, last_timestamp: int, limit: int):
+    def messages_of_room(self, room_id: int, last_timestamp: int, limit: int):
         try:
             result = self.table().query(
                 KeyConditionExpression=(

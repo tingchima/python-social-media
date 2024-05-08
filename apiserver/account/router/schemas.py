@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 
 from account.domain.entities import Token as TokenEntity
-from account.domain.entities import User as UserEntity
+from account.domain.entities import User as User
 from ninja import Schema
 
 
@@ -68,6 +68,7 @@ class UserCreateBody(Schema):
     """Represents a user create body schema."""
 
     email: str
+    username: str
     password: str
     avatar_url: str
     user_type: str
@@ -79,7 +80,7 @@ class UserCreateReponse(Schema):
     user: User
 
     @classmethod
-    def build(cls, user: UserEntity) -> dict:
+    def build(cls, user: User) -> dict:
         return cls(
             user=User(
                 user_id=user.id,

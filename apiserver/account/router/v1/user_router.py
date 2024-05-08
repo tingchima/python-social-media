@@ -1,5 +1,5 @@
 from account.containers import user_service
-from account.domain.entities import User as UserEntity
+from account.domain.entities import User as User
 from account.domain.enums import UserType
 from ninja import Router
 from shared.router.response import Response, to_response
@@ -18,8 +18,9 @@ router = Router()
 )
 def user_create(request, body: UserCreateBody):
     try:
-        user_param = UserEntity.new(
+        user_param = User.new(
             email=body.email,
+            username=body.username,
             password=body.password,
             avatar_url=body.avatar_url,
             user_type=UserType[body.user_type].name,

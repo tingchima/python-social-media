@@ -21,11 +21,11 @@ class User(AbstractBaseUser, Base):
         default="",
         db_comment="username",
     )
-    email = models.EmailField(
+    email_address = models.EmailField(
         db_index=True,
         max_length=255,
         unique=True,
-        db_comment="email",
+        db_comment="email address",
     )
     user_type = models.CharField(
         choices=UserType,
@@ -44,3 +44,32 @@ class User(AbstractBaseUser, Base):
         null=True,
         db_comment="the datetime of user was not actived",
     )
+
+
+class Email(Base):
+    """Represnets a email model."""
+
+    class Meta:
+        db_table_comment = "email data"
+        db_table = "emails"
+
+    class Status(models.TextChoices):
+        """Represents a enum of email status."""
+
+        READY = "READY", "Ready"
+        SENDING = "SENDING", "Sending"
+        SENT = "SENT", "Sent"
+        FAILED = "FAILED", "Failed"
+
+    status = models.CharField(
+        max_length=255,
+        db_index=True,
+        choices=Status.choices,
+        default=Status.READY,
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="user",
+    )
+    sent_at = models.DateTimeField(null=True)

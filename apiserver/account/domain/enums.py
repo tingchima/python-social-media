@@ -18,3 +18,12 @@ class UserType(Enum):
 
 SOCIALMEDIA_WEB = "socialmedia_web"
 SOCIALMEDIA_APP = "socialmedia_app"
+
+
+class EmailStatus(Enum):
+    """Represents a enum of email status."""
+
+    READY = "READY", "Ready"
+    SENDING = "SENDING", "Sending"
+    SENT = "SENT", "Sent"
+    FAILED = "FAILED", "Failed"

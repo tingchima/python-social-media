@@ -5,7 +5,7 @@ from datetime import datetime
 
 from shared.domain.entities import Entity
 
-from .enums import UserType
+from .enums import EmailStatus, UserType
 
 
 @dataclass
@@ -36,13 +36,28 @@ class User(Entity):
     def new(
         cls,
         email: str,
+        username: str,
         password: str,
         avatar_url: str,
         user_type: UserType,
     ) -> User:
         return cls(
             email=email,
+            username=username,
             password=password,
             avatar_url=avatar_url,
             user_type=user_type,
         )
+
+
+@dataclass
+class Email(Entity):
+    """Represents a entity of email."""
+
+    user_id: int
+    status: EmailStatus
+
+    id: int = None
+    sent_at: datetime = None
+    created_at: datetime = None
+    updated_at: datetime = None

@@ -1,4 +1,4 @@
-from account.domain.entities import User as UserEntity
+from account.domain.entities import User as User
 from account.models import User as UserModel
 from shared.domain.errors import NotFoundError
 from shared.infrastructure.data_meappers import DataMapper
@@ -8,11 +8,11 @@ from shared.infrastructure.repositories import DjangoRepository
 class UserDataMapper(DataMapper):
     """Represents a data mapper of user."""
 
-    def model_to_entity(self, model: UserModel) -> UserEntity:
-        return UserEntity(
+    def model_to_entity(self, model: UserModel) -> User:
+        return User(
             id=model.id,
             username=model.username,
-            email=model.email,
+            email=model.email_address,
             password=model.password,
             user_type=model.user_type,
             avatar_url=model.avatar_url,
@@ -22,11 +22,11 @@ class UserDataMapper(DataMapper):
             updated_at=model.updated_at,
         )
 
-    def entity_to_model(self, entity: UserEntity) -> UserModel:
+    def entity_to_model(self, entity: User) -> UserModel:
         return UserModel(
             id=entity.id,
             username=entity.username,
-            email=entity.email,
+            email_address=entity.email,
             password=entity.password,
             user_type=entity.user_type,
             avatar_url=entity.avatar_url,
@@ -44,7 +44,7 @@ class UserRepository(DjangoRepository):
 
     model_cls = UserModel
 
-    def user_get_by_email(self, email: str) -> UserEntity:
+    def user_get_by_email(self, email: str) -> User:
         try:
             model = UserModel.objects.get(email=email)
         except UserModel.DoesNotExist:

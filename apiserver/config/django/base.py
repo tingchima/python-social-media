@@ -31,6 +31,10 @@ ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
+THIRD_PARTY_APPS = [
+    "django_celery_results",
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,10 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_extensions",
+    *THIRD_PARTY_APPS,
     "shared",
     "api",
     "account",
     "chat",
+    "tasks",
 ]
 
 MIDDLEWARE = [
@@ -180,4 +186,5 @@ LOGGING = {
 
 
 from ..settings.aws import *  # noqa
+from ..settings.celery import *  # noqa
 from ..settings.jwt import *  # noqa

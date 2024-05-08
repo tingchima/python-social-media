@@ -1,3 +1,4 @@
+from account.application.email_service import EmailService
 from account.application.token_service import TokenService
 from account.application.user_service import UserService
 from config.django.base import JWT_EXPIRATION_DELTA_SECONDS, JWT_ISSUSER, JWT_SECRET_KEY
@@ -9,3 +10,5 @@ token_service: TokenService = TokenService(
 )
 
 user_service: UserService = UserService()
+
+email_service: EmailService = EmailService()
