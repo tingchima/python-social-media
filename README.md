@@ -26,10 +26,11 @@ Implement simple social media application with Python and Django
 
 ## Local setup
 
+### apiserver application
+
 1. dynamodb: `python3 manage.py runscript migrate_dynamodb_local_script`
 2. database: `CREATE DATABASE socialmedia;`
 3. task queue: `Celery -A tasks worker -l debug`
-
 
 ## Todo
 
