@@ -24,6 +24,13 @@ Implement simple social media application with Python and Django
 7. RabbitMQ
 8. Pika
 
+## Local setup
+
+1. dynamodb: `python3 manage.py runscript migrate_dynamodb_local_script`
+2. database: `CREATE DATABASE socialmedia;`
+3. task queue: `Celery -A tasks worker -l debug`
+
+
 ## Todo
 
 1. Insert message delata data to search databaase with cdc process.
