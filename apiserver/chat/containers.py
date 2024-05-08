@@ -19,7 +19,7 @@ dynamodb = boto3.resource(
     endpoint_url=AWS_DYNAMODB_LOCAL,
 )
 
-rabbitmq_url = "{}://{}:{}@{}:{}{}".format(
+amqp_url = "{}://{}:{}@{}:{}{}".format(
     RABBITMQ_SCHEME,
     RABBITMQ_USERNAME,
     RABBITMQ_PASSWORD,
@@ -27,7 +27,7 @@ rabbitmq_url = "{}://{}:{}@{}:{}{}".format(
     RABBITMQ_PORT,
     RABBITMQ_VIRTUAL_HOST,
 )
-rabbitmq = BlockingConnection(parameters=URLParameters(rabbitmq_url))
+rabbitmq = BlockingConnection(parameters=URLParameters(amqp_url))
 
 
 message_service: MessageService = MessageService(

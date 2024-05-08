@@ -55,9 +55,9 @@ services:
     hostname: rabbitmq-1
     container_name: rabbitmq-1
     environment:
-      RABBITMQ_DEFAULT_USER: socialmedia-erlang-cookie
+      RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-      RABBITMQ_ERLANG_COOKIE: guest
+      RABBITMQ_ERLANG_COOKIE: socialmedia
       RABBITMQ_DEFAULT_VHOST: /
     ports:
       - "5672:5672"
