@@ -1,5 +1,6 @@
 # env
 apiserver/.env
+wsgatewayserver/.env
 
 # Local docker data
 data
