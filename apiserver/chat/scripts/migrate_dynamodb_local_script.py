@@ -1,5 +1,4 @@
 import boto3
-import boto3.resources.factory
 from botocore.exceptions import ClientError
 from config.django.base import AWS_DYNAMODB_LOCAL
 

@@ -11,9 +11,9 @@ from .chatroom_service import ChatroomService
 class MessageService:
     """Represents a service of message."""
 
-    def __init__(self, chatroom_service, dynamodb, rabbitmq):
-        self.message_repo: MessageRepository = MessageRepository(dynamodb=dynamodb)
-        self.message_event_broker: MessageEventBroker = MessageEventBroker(rabbitmq=rabbitmq)
+    def __init__(self, chatroom_service, message_repo, message_event_broker):
+        self.message_repo: MessageRepository = message_repo
+        self.message_event_broker: MessageEventBroker = message_event_broker
         self.chatroom_repo: ChatroomRepository = ChatroomRepository()
         self.message_rows_number = 50  # default settings
         self.chatroom_service: ChatroomService = chatroom_service

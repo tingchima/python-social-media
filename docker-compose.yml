@@ -1,34 +1,44 @@
 version: "3.8"
 
 services:
+  # apiserver:
+  #   depends_on: 
+  #     - postgres-master
+  #   container_name: socialmedia-apiserver
+  #   build:
+  #     context: ./apiserver
+  #     dockerfile: Dockerfile
+  #   image:
+  #     socialmedia-apiserver:latest
+  #   environment:
+  #     - APP_NAME=apiserver-1
+  #     - APP_PORT=8000
+  #   ports:
+  #     - 8000:8000
+  #   command: sh -c "/app/entrypoint.sh"
+
   postgres-master:
     image: postgres:16-alpine
     container_name: postgres-master
+    command: postgres -p 5432
+    expose:
+      - 5432
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - ./data/master:/var/lib/postgresql/data
-    command: postgres -c wal_level=logical
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      socialmedia-nw:
-        ipv4_address: 179.18.0.101
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST=postgres-master
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=socialmedia
 
   pgbouncer-master:
     image: edoburu/pgbouncer
     container_name: pgbouncer-master
     ports:
       - "54322:5432"
-    networks:
-      socialmedia-nw:
-        ipv4_address: 179.18.0.103
     environment:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
@@ -62,13 +72,4 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      socialmedia-nw:
-        ipv4_address: 179.18.0.110
 
-networks:
-  socialmedia-nw:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 179.18.0.0/24
