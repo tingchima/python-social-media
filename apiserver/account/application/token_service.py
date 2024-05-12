@@ -11,14 +11,14 @@ from ..infrastructure.postgres.user_repository import UserRepository
 class TokenService:
     """Represents a service of token."""
 
-    user_repo: UserRepository = UserRepository()
-
     def __init__(
         self,
+        user_repo,
         jwt_secret_key: str,
         jwt_issuer: str,
         jwt_exp_delta_seconds: int,
     ):
+        self.user_repo: UserRepository = user_repo
         self.jwt_secret = jwt_secret_key
         self.jwt_iss = jwt_issuer
         self.jwt_exp_delta_seconds = jwt_exp_delta_seconds

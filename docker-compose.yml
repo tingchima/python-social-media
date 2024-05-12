@@ -1,69 +1,47 @@
 version: "3.8"
 
 services:
-  # apiserver:
-  #   depends_on: 
-  #     - postgres-master
-  #   container_name: socialmedia-apiserver
-  #   build:
-  #     context: ./apiserver
-  #     dockerfile: Dockerfile
-  #   image:
-  #     socialmedia-apiserver:latest
-  #   environment:
-  #     - APP_NAME=apiserver-1
-  #     - APP_PORT=8000
-  #   ports:
-  #     - 8000:8000
-  #   command: sh -c "/app/entrypoint.sh"
+  apiserver:
+    depends_on: 
+      - postgres
+    container_name: apiserver
+    build:
+      context: ./apiserver
+      dockerfile: Dockerfile
+    image:
+      apiserver:latest
+    ports:
+      - 8000:8000
+    command: sh -c "/app/entrypoint.sh"
+    environment:
+      - APP_NAME=apiserver-1
+      - APP_PORT=8000
+    env_file:
+      - apiserver/.env.dev
 
-  postgres-master:
+  postgres:
     image: postgres:16-alpine
-    container_name: postgres-master
-    command: postgres -p 5432
-    expose:
-      - 5432
+    container_name: postgres
     ports:
       - 5432:5432
     volumes:
-      - ./data/master:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_HOST=postgres-master
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=socialmedia
-
-  pgbouncer-master:
-    image: edoburu/pgbouncer
-    container_name: pgbouncer-master
-    ports:
-      - "54322:5432"
-    environment:
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_HOST=postgres-master
-      - DB_NAME=socialmedia
-      - MAX_CLIENT_CONN=100
-      - AUTH_TYPE=scram-sha-256 # for postgres:14 and above
-      - POOL_MODE=transaction
-      - ADMIN_USERS=postgres
-    depends_on:
-      - postgres-master
+      - ./data/postgres/master:/var/lib/postgresql/data
+    env_file:
+      - apiserver/.env
 
   dynamodb:
     image: amazon/dynamodb-local
     container_name: dynamodb
+    restart: always
     ports:
       - "8080:8000"
     volumes:
       - ./data/dynamodb:/home/dynamodblocal/data
 
-
-  rabbitmq-1:
+  rabbitmq:
     image: rabbitmq:3.13-management
-    hostname: rabbitmq-1
-    container_name: rabbitmq-1
+    hostname: rabbitmq
+    container_name: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest

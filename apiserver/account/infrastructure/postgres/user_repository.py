@@ -46,7 +46,7 @@ class UserRepository(DjangoRepository):
 
     def user_get_by_email(self, email: str) -> User:
         try:
-            model = UserModel.objects.get(email=email)
+            model = UserModel.objects.get(email_address=email)
         except UserModel.DoesNotExist:
             raise NotFoundError("specified user not found by email")
         return self.data_mapper.model_to_entity(model=model)

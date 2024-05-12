@@ -6,7 +6,8 @@ from django.db import transaction
 class EmailService:
     """Represents a service of email."""
 
-    email_repo: EmailRepository = EmailRepository()
+    def __init__(self, email_repo):
+        self.email_repo: EmailRepository = email_repo
 
     def email_get_by_id(self, id: int) -> Email:
         email = self.email_repo.get_by_key(id=id)

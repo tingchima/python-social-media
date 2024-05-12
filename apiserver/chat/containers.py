@@ -5,6 +5,7 @@ from chat.infrastructure.dynamodb.message_repository import MessageRepository
 from chat.infrastructure.rabbitmq.message_event_broker import MessageEventBroker
 from config.django.base import (
     AWS_DYNAMODB_LOCAL,
+    AWS_REGION_NAME,
     RABBITMQ_HOST,
     RABBITMQ_PASSWORD,
     RABBITMQ_PORT,
@@ -13,13 +14,6 @@ from config.django.base import (
     RABBITMQ_VIRTUAL_HOST,
 )
 from pika import BlockingConnection, URLParameters
-
-chatroom_service: ChatroomService = ChatroomService()
-
-dynamodb = boto3.resource(
-    service_name="dynamodb",
-    endpoint_url=AWS_DYNAMODB_LOCAL,
-)
 
 amqp_url = "{}://{}:{}@{}:{}{}".format(
     RABBITMQ_SCHEME,
@@ -31,13 +25,20 @@ amqp_url = "{}://{}:{}@{}:{}{}".format(
 )
 rabbitmq = BlockingConnection(parameters=URLParameters(amqp_url))
 
+dynamodb = boto3.resource(
+    service_name="dynamodb",
+    endpoint_url=AWS_DYNAMODB_LOCAL,
+    region_name=AWS_REGION_NAME,
+)
 
 message_repo = MessageRepository(dynamodb=dynamodb)
 
 message_event_broker = MessageEventBroker(rabbitmq=rabbitmq)
 
+chatroom_service: ChatroomService = ChatroomService()
+
 message_service: MessageService = MessageService(
     chatroom_service=chatroom_service,
-    message_repo=message_repo,
-    message_event_broker=message_event_broker,
+    message_repo=None,
+    message_event_broker=None,
 )

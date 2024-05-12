@@ -73,12 +73,14 @@ class ChatroomCreateResponse(Schema):
 
     @classmethod
     def build(cls, room: ChatroomEntity) -> dict:
+        print(f"room={room}")
         return cls(
             room=Chatroom(
                 room_id=room.id,
                 room_name=room.room_name,
                 room_type=room.room_type,
                 avatar_url=room.avatar_url,
+                last_message_timestamp=int(room.last_message_timestamp or 0),
                 created_at=room.created_at,
                 updated_at=room.updated_at,
             ),
